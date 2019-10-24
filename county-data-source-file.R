@@ -10,7 +10,8 @@ library(leaflet)
 countyData <- select(countypres_2000_2016, -c(office, version))
 
 
-# Add columns
+# Edit columns to create other value in party colomns
 countyData[is.na(countyData)] <- "other"
+countyData$party <- replace(countyData$party, "green", "other")
 
 View(countyData)

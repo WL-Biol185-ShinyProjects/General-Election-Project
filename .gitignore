@@ -1,5 +1,5 @@
 # Ignore Rstudio project files
-.Rproj
+*.Rproj
 
 # History files
 .Rhistory
