@@ -16,7 +16,10 @@ countyData <- select(countypres_2000_2016, -c(office, version))
 countyData[is.na(countyData)] <- "other"
 
 View(countyData)
+<<<<<<< HEAD
 
 
 #Making "green" = "other" under "party" column
 countyData$party[countyData$party=="green"] <- "other"
+=======
+>>>>>>> 164cbe50ca4af52e0225d1807737b82239eaecda
