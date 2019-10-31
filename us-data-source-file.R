@@ -19,8 +19,8 @@ stateData$party[stateData$party %notin% c("democrat","republican")] <- "other"
 #changes values that are NA to other 
 stateData[is.na(stateData)] <- "other"
 
+stateData <- select(stateData, c("year", "state", "state_po", "party", "candidatevotes"))
+
+stateData <- spread(stateData, c(party, year, state), candidatevotes)
+
 View(stateData)
-
-
-us_map <- plot_usmap(data = stateData, values = "party")
-us_map
