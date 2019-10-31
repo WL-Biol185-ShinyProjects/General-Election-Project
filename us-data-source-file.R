@@ -21,6 +21,8 @@ stateData[is.na(stateData)] <- "other"
 
 stateData <- select(stateData, c("year", "state", "state_po", "party", "candidatevotes"))
 
-stateData <- spread(stateData, c(party, year, state), candidatevotes)
+stateData <- aggregate(candidatevotes~year+state+party+state_po, data = stateData, FUN = sum)
+
+stateData <- spread(stateData, party, candidatevotes)
 
 View(stateData)
