@@ -3,8 +3,12 @@ library(ggplot2)
 library(tidyverse)
 library(lubridate)
 library(stringi)
+library(readr)
 
-#pulls in csv and outputs a table
+
+# pulls in csv and outputs a table
+probability_data <- read_csv("probability_data.csv")
+X1976_2016_president <- read_csv("1976-2016-president.csv")
 stateData <- select(X1976_2016_president, -c(office,version,writein,notes))
 
 #changes the year column to R's year object
@@ -64,8 +68,10 @@ probabilityData$winner <- "none"
 probabilityData$winner[probabilityData$electoralVotesNumber < 5] <- "republican"
 probabilityData$winner[probabilityData$electoralVotesNumber > 20] <- "democrat"
 
-sumProbData <- aggregate(electoralVotesNumber~winner, data = probabilityData, FUN = sum)
+sumProbData <- aggregate(electoralVotesNumber~winner, 
+                         data = probabilityData, FUN = sum)
 
+View(probabilityData)
 View(sumProbData)
 
 #repVotes <
