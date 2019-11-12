@@ -21,3 +21,5 @@ stateData$party[stateData$party %notin% c("democrat","republican")] <- "other"
 
 #changes values that are NA to other 
 stateData[is.na(stateData)] <- "other"
+
+View(stateData)
