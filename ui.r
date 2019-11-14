@@ -1,10 +1,18 @@
 library(shiny)
 library(markdown)
 
-navbarPage("title",
-           tabPanel("Home"),
-           tabPanel("Nationwide Election Map"),
-           tabPanel("Statewide Election Map"),
-           tabPanel("Swing State Summary"),
-           tabPanel("Election Predictor")
-           )
+tags$head(tags$style(type = 'text/css','.navbar-brand{display:none;}'))
+navbarPage(
+ '',
+      tabPanel("Home",
+        fluidRow(
+          column(6, 
+            includeMarkdown("test.md"))
+        )),
+      tabPanel("Nationwide Election Map"),
+      tabPanel("Statewide Election Map"),
+      tabPanel("Swing State Summary"),
+      tabPanel("Election Predictor",
+               
+               )
+)

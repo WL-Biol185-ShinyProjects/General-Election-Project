@@ -74,6 +74,10 @@ sumProbData <- aggregate(electoralVotesNumber~winner,
 View(probabilityData)
 View(sumProbData)
 
+
+# Gets electoral votes for states up for grabs
+probabilityData[which(probabilityData[,4] == "none"), 2]
+
 #repVotes <
 #demVotes
 #freeVotes
