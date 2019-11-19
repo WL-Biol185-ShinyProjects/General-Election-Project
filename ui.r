@@ -1,40 +1,34 @@
 library(shiny)
 library(markdown)
 
-tags$head(tags$style(type = 'text/css','.navbar-brand{display:none;}'))
 navbarPage(
- '',
-      tabPanel("Home",
-        fluidRow(
-          column(6, 
-            includeMarkdown("test.md"))
-        )),
-      tabPanel("Nationwide Election Map"),
-      tabPanel("Statewide Election Map"),
-      tabPanel("Swing State Summary"),
+ "Home",
       
  
  
  
  tabPanel("Election Predictor",
-          
-          
-          selectizeInput(inputID="demStates",
+          selectizeInput(inputId = "demStates",
                          label = "Democratic States",
-                         choices = sumStatedata$state,
+                         choices = sumStateData$state,
                          multiple = TRUE
                         ),
-          selectizeInput(inputID="repStates",
+          selectizeInput(inputId = "repStates",
                          label = "Republican states",
-                         choices = sumStatedata$state,
+                         choices = sumStateData$state,
                          multiple = TRUE
-                        ),
-            
+                        )
           )
-                         
-            
-            
-          )
+)
                
-               
+
+# tabPanel("Home",
+#          fluidRow(
+#            column(6, 
+#                   includeMarkdown("test.md"))
+#          )),
+# tabPanel("Nationwide Election Map"),
+# tabPanel("Statewide Election Map"),
+# tabPanel("Swing State Summary"),
+
 
