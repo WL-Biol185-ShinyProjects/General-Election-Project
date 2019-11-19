@@ -4,20 +4,33 @@ library(tidyverse)
 library(lubridate)
 library(stringi)
 
+# creates a dictionary  of the state and its electoral vote
 state_ev_list <- list(state=probability_data$State, ev=probability_data$electoralVotesNumber)
-x <- 0
-#matrix <- as.matrix(,nrow=2^51,ncol=52)
 
-combinations <- t(combn(state_ev_list$ev,2))
+#algorithm for calculating the probability
 
-# for (i in matrix[1,]){
-# for (vector in combinations) {
-#   matrix[i,] <- vector
-# }}
-# matrix
+#count is the varaible indicating qwhich instance has electoral votes over 270
+count <- 0
+#10000 iterations
+for (i in seq(1:10000)) {
+    
+  #will possibly make changes to the type of distribution n is taken from
+    # where n is the number of states selected in each sampling
+    number <- runif(1,min=1, max=51)
+    as.integer(number)
+    
+    #code for sampling the vector of electoral votes
+    sampling <- sample(state_ev_list$ev,as.integer(number))
+    summation <- sum(sampling)
+    
+    #checks to see is the sampling has over 270 electoral votes
+    if (summation > 270){
+      
+      #increments the count
+      count <- count + 1
+    }
+}
 
+#computs the probability the election going a cetain way
+probability <- count / 10000
 
-#for (i in 0:5){
-#selection <- as.matrix(combn(state_ev_list$ev,5),nrow=2^51,ncol=52)
-#selection
-#matrix
