@@ -12,7 +12,29 @@ navbarPage(
       tabPanel("Nationwide Election Map"),
       tabPanel("Statewide Election Map"),
       tabPanel("Swing State Summary"),
-      tabPanel("Election Predictor",
+      
+ 
+ 
+ 
+ tabPanel("Election Predictor",
+          
+          
+          selectizeInput(inputID="demStates",
+                         label = "Democratic States",
+                         choices = sumStatedata$state,
+                         multiple = TRUE
+                        ),
+          selectizeInput(inputID="repStates",
+                         label = "Republican states",
+                         choices = sumStatedata$state,
+                         multiple = TRUE
+                        ),
+            
+          )
+                         
+            
+            
+          )
                
-               )
-)
+               
+
