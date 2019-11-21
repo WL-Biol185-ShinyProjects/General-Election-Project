@@ -1,6 +1,6 @@
 library(shiny)
 library(markdown)
-
+library(tidyverse)
 navbarPage(
  "Home",
       
@@ -8,16 +8,37 @@ navbarPage(
  
  
  tabPanel("Election Predictor",
-          selectizeInput(inputId = "demStates",
-                         label = "Democratic States",
-                         choices = sumStateData$state,
-                         multiple = TRUE
-                        ),
-          selectizeInput(inputId = "repStates",
-                         label = "Republican states",
-                         choices = sumStateData$state,
-                         multiple = TRUE
-                        )
+          
+          
+          
+          
+          sidebarLayout(
+            sidebarPanel(
+              checkboxGroupInput("demStates", "Blue States ",
+                           sumStateData$state,
+                           selected = sumStateData$state[sumStateData$color == "Democrat"]
+            )),
+               sidebarPanel(
+                  checkboxGroupInput("repStates", "Red States ",
+                               sumStateData$state,
+                               selected = sumStateData$state[sumStateData$color == "Republican"]
+                  ))),
+          mainPanel()
+          # selectizeInput(inputId = "demStates",
+          #                label = "Democratic States",
+          #                choices = sumStateData$state[sumStateData$color == "Democrat"],
+          #                multiple = TRUE
+          #               ),
+          # selectizeInput(inputId = "repStates",
+          #                label = "Republican states",
+          #                choices = sumStateData$state[sumStateData$color == "Republican"],
+          #                multiple = TRUE
+          #               ),
+          # selectizeInput(inputId = "Swing States",
+          #                label = "Swing States",
+          #                choices = sumStateData$state[sumStateData$color == "Swing State"],
+          #                multiple = TRUE
+          #               )
           )
 )
                

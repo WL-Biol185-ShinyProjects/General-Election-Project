@@ -15,7 +15,32 @@ function(input, output, session) {
   #   
   #   input$demStates <- filter(sumStateData, color == "Democrat" & color == "Swing State")
   #   
+  #   
+  # observe({
+  #   
+  #   updateCheckboxGroupInput(session, "blue", )
+  #   
+  # })
+  # 
+  
+  
+  output$barPlot <- renderPlot({
     
+    observe({
+      
+       input$repStates <- sumStateData$state
+       updateCheckboxGroupInput(session, "repStates", selected = setdiff(input$repStates,input$demStates) )
+      
+    })
+    
+    observe({
+    
+      input$demStates <- sumStateData$state
+      updateCheckboxGroupInput(session, "demStates", selected = setdiff(input$repStates,input$demStates))
+    })
+  
+    
+  })
     
     
    }
