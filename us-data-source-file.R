@@ -99,8 +99,16 @@ sumProbData <- aggregate(electoralVotesNumber~winner,
 
 states <- sum(probabilityData$electoralVotesNumber[probabilityData$winner == "democrat"])
 states
-View(sumProbData)
-View(probabilityData)
+# sumProbData <- tolower(sumProbData)
+
+sumStateData_joined <- inner_join(sumStateData, probabilityData, by = c("state" = "State" ))
+View(sumStateData_joined)
+
+sumStateData_joined %>%
+  ggplot(aes(color, electoralVotesNumber)) +
+  geom_bar(stat = "identity")
+
+
 # Gets electoral votes for states up for grabs
 probabilityData[which(probabilityData[,4] == "none"), 2]
 

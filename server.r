@@ -23,35 +23,36 @@ function(input, output, session) {
   # })
   # 
   
-  
+
   output$barPlot <- renderPlot({
-    
+
     observe({
-      
-       input$repStates <- sumStateData$state
-       updateCheckboxGroupInput(session, "repStates", selected = setdiff(input$repStates,input$demStates) )
-      
+        
+       updateCheckboxGroupInput(session, "repStates", 
+                                label = "Red States", 
+                                choices = setdiff(sumStateData_joined$state, input$demStates),
+                                selected = setdiff(input$repStates,input$demStates))
+       
+       updateCheckboxGroupInput(session, "demStates", 
+                                label = "Blue States",
+                                choices = setdiff(sumStateData_joined$state, input$repStates),
+                                selected = setdiff(input$demStates,input$repStates))
+       
     })
-    
-    observe({
-    
-      input$demStates <- sumStateData$state
-      updateCheckboxGroupInput(session, "demStates", selected = setdiff(input$repStates,input$demStates))
-    })
-  
-    
+    ggplot(sumStateData_joined, aes(color, electoralVotesNumber)) +
+      geom_bar(stat = "identity")
   })
-    
-    
+
+
    }
-  
-  
+  # 
+  # 
   
   
   
   # 
   # 
-  # 
+  # setdiff(repStates,demStates)
   # output$plot <- renderPlot({
   #   plot(cars, type=input$plotType)
   # })

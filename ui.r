@@ -1,29 +1,25 @@
 library(shiny)
 library(markdown)
 library(tidyverse)
+
+
 navbarPage(
  "Home",
       
- 
- 
- 
  tabPanel("Election Predictor",
-          
-          
-          
           
           sidebarLayout(
             sidebarPanel(
-              checkboxGroupInput("demStates", "Blue States ",
-                           sumStateData$state,
-                           selected = sumStateData$state[sumStateData$color == "Democrat"]
+              checkboxGroupInput("demStates", "Blue States",
+                           sumStateData_joined$state,
+                           selected = sumStateData_joined$state[sumStateData_joined$color == "Democrat"]
             )),
                sidebarPanel(
                   checkboxGroupInput("repStates", "Red States ",
-                               sumStateData$state,
-                               selected = sumStateData$state[sumStateData$color == "Republican"]
+                               sumStateData_joined$state,
+                               selected = sumStateData_joined$state[sumStateData_joined$color == "Republican"]
                   ))),
-          mainPanel()
+          mainPanel(plotOutput("barPlot"))
           # selectizeInput(inputId = "demStates",
           #                label = "Democratic States",
           #                choices = sumStateData$state[sumStateData$color == "Democrat"],
