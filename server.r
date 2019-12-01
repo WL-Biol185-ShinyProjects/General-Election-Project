@@ -37,17 +37,26 @@ function(input, output, session) {
   })
   
   updateTable <- reactive({
-    sumStateData_joined$winner <- "none"
-    sumStateData_joined$winner[sumStateData_joined$state == input$demStates] <- "democrat"
-    sumStateData_joined$winner[sumStateData_joined$state == input$repStates] <- "republican"
+    demStates <- input$demStates
+    repStates <- input$repStates
+    
+    numDemStates <- length(demStates)
+    numRepStates <- length(repStates)
+    
+    sumStateData_joined$color <- "Swing state"
+    for (i in 1:numRepStates){
+      sumStateData_joined$color[sumStateData_joined$state == repStates[i]] <- "Republican"
+    }
+    for (i in 1:numDemStates){
+    sumStateData_joined$color[sumStateData_joined$state == demStates[i]] <- "Democrat"
+    }
+
+    return(sumStateData_joined)
   })
 
   output$barPlot <- renderPlot({
-    # sumStateData_joined$winner <- "none"
-    # sumStateData_joined$winner[sumStateData_joined$state == input$demStates] <- "democrat"
-    # sumStateData_joined$winner[sumStateData_joined$state == input$repStates] <- "republican"
-    
-    ggplot(sumStateData_joined, aes(winner, electoralVotesNumber)) +
+    displayTable <- updateTable()
+    ggplot(displayTable, aes(color, electoralVotesNumber)) +
       geom_bar(stat = "identity")
   })
 
