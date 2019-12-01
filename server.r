@@ -22,24 +22,32 @@ function(input, output, session) {
   #   
   # })
   # 
+  observe({
+    
+    updateCheckboxGroupInput(session, "repStates", 
+                             label = "Red States", 
+                             choices = setdiff(sumStateData_joined$state, input$demStates),
+                             selected = setdiff(input$repStates,input$demStates))
+    
+    updateCheckboxGroupInput(session, "demStates", 
+                             label = "Blue States",
+                             choices = setdiff(sumStateData_joined$state, input$repStates),
+                             selected = setdiff(input$demStates,input$repStates))
+    
+  })
   
+  updateTable <- reactive({
+    sumStateData_joined$winner <- "none"
+    sumStateData_joined$winner[sumStateData_joined$state == input$demStates] <- "democrat"
+    sumStateData_joined$winner[sumStateData_joined$state == input$repStates] <- "republican"
+  })
 
   output$barPlot <- renderPlot({
-
-    observe({
-        
-       updateCheckboxGroupInput(session, "repStates", 
-                                label = "Red States", 
-                                choices = setdiff(sumStateData_joined$state, input$demStates),
-                                selected = setdiff(input$repStates,input$demStates))
-       
-       updateCheckboxGroupInput(session, "demStates", 
-                                label = "Blue States",
-                                choices = setdiff(sumStateData_joined$state, input$repStates),
-                                selected = setdiff(input$demStates,input$repStates))
-       
-    })
-    ggplot(sumStateData_joined, aes(color, electoralVotesNumber)) +
+    # sumStateData_joined$winner <- "none"
+    # sumStateData_joined$winner[sumStateData_joined$state == input$demStates] <- "democrat"
+    # sumStateData_joined$winner[sumStateData_joined$state == input$repStates] <- "republican"
+    
+    ggplot(sumStateData_joined, aes(winner, electoralVotesNumber)) +
       geom_bar(stat = "identity")
   })
 
