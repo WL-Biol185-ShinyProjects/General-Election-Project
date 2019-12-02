@@ -19,7 +19,8 @@ navbarPage(
                                sumStateData_joined$state,
                                selected = sumStateData_joined$state[sumStateData_joined$color == "Republican"]
                   ))),
-          mainPanel(plotOutput("barPlot"))
+          mainPanel(plotOutput("barPlot"),
+                    plotOutput("pieChart"))
           # selectizeInput(inputId = "demStates",
           #                label = "Democratic States",
           #                choices = sumStateData$state[sumStateData$color == "Democrat"],

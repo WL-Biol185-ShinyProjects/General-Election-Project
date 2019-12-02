@@ -14,9 +14,9 @@ count <- 0
 #10000 iterations
 for (i in seq(1:10000)) {
     
-  #will possibly make changes to the type of distribution n is taken from
+    #will possibly make changes to the type of distribution n is taken from
     # where n is the number of states selected in each sampling
-    number <- runif(1,min=1, max=51)
+    number <- runif(1, min=1, max=51)
     as.integer(number)
     
     #code for sampling the vector of electoral votes
@@ -31,6 +31,7 @@ for (i in seq(1:10000)) {
     }
 }
 
-#computs the probability the election going a cetain way
+#computs the probability the election going a certain way
 probability <- count / 10000
 
+probability
