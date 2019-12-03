@@ -29,7 +29,7 @@ function(input, output, session) {
           (Colored with most recent 2020 election predictions)") +
       ylab("Net Victories by Party") +
       xlab("States") +
-      scale_fill_manual(values = c("blue", "red", "grey")) +
+      scale_fill_manual(values = c("blue", "red", "darkgrey")) +
       theme(plot.title = element_text(hjust = 0.5, size = 24), 
             legend.background = element_rect(fill = "white", size = 0.5, 
                                              linetype = "solid", 
@@ -79,7 +79,15 @@ function(input, output, session) {
   output$barPlot <- renderPlot({
     displayTable <- updateTable()
     ggplot(displayTable, aes(color, electoralVotesNumber, fill=color)) +
-      geom_bar(stat = "identity")
+      geom_bar(stat = "identity") +
+      scale_fill_manual(values = c("blue", "red", "darkgrey")) +
+      ggtitle("Total Electoral Votes for each Party") +
+      ylab("Total Electoral Votes") +
+      xlab("Declaration") +
+      theme(plot.title = element_text(hjust = 0.5, size = 24), 
+          legend.background = element_rect(fill = "white", size = 0.5, 
+                                           linetype = "solid", 
+                                           color = 'black'))
   })
   
   output$pieChart <- renderPlot({
@@ -148,10 +156,13 @@ function(input, output, session) {
       theme(axis.line = element_blank(), axis.text = element_blank(),
             axis.ticks = element_blank(), panel.grid = element_blank(),
             axis.title.x = element_blank(), axis.title.y = element_blank(),
-            # plot.background = element_rect(inherit.blank = TRUE),
-            plot.title = element_text(hjust = 0.5, size = 24)) 
-    
-    
+            legend.background = element_rect(fill = "white", size = 0.5, 
+                                           linetype = "solid", 
+                                           color = 'black'),
+            legend.text = element_text(size = 16), 
+            legend.title = element_text(size = 20),
+            plot.title = element_text(hjust = 0.5, size = 24),
+            ) 
   })
   
 }
