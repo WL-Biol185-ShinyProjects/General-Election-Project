@@ -1,6 +1,7 @@
 library(shiny)
 library(ggplot2)
 library(tidyverse)
+library(scales)
 
 function(input, output, session) {
   
@@ -46,12 +47,12 @@ function(input, output, session) {
   observe({
     
     updateCheckboxGroupInput(session, "repStates", 
-                             label = "Red States", 
+                             label = " ", 
                              choices = setdiff(sumStateData_joined$state, input$demStates),
                              selected = setdiff(input$repStates,input$demStates))
     
     updateCheckboxGroupInput(session, "demStates", 
-                             label = "Blue States",
+                             label = " ",
                              choices = setdiff(sumStateData_joined$state, input$repStates),
                              selected = setdiff(input$demStates,input$repStates))
     
@@ -119,26 +120,40 @@ function(input, output, session) {
         repCount <- repCount + 1
       }
       
-      #checks to see is the sampling has over 270 electoral votes
-      if (summation > (270 - sum(displayTable$electoralVotesNumber[displayTable$color == "Democrat"]))) {
-        
-        #increments the count
-        demCount <- demCount + 1
-      }
+      # #checks to see is the sampling has over 270 electoral votes
+      # if (summation > (270 - sum(displayTable$electoralVotesNumber[displayTable$color == "Democrat"]))) {
+      #   
+      #   #increments the count
+      #   demCount <- demCount + 1
+      # }
     }
-    
-    #computes the probability the election going a certain way
-    demProbability <- demCount / 10000
     
     #computes the probability the election going a certain way
     repProbability <- repCount / 10000
     
-    dataframe <- data.frame(probs = c((demProbability*100), (repProbability*100)),
-                            labels = c("Democrats", "Republican"))
+    #computes the probability the election going a certain way
+    demProbability <- 1 - repProbability
     
-    ggplot(dataframe, aes(x="", y=probs, fill=labels))+
-      geom_bar(stat = "identity") +
-      coord_polar("y", start=0)
+    print(demProbability*100)
+    print(repProbability*100)
+    
+    probData <- data.frame(probs = c((demProbability*100), (repProbability*100)),
+                            Party = c("Democrats", "Republican"))
+    
+    probData <- probData %>%
+                arrange(desc(Party)) %>%
+                mutate(lab.ypos = cumsum(probs) - 0.5*probs)
+    
+    mycols <-c("#0000FF", "#FF0000")
+    
+    ggplot(probData, aes(x="", y = probs, fill=Party)) +
+      geom_bar(width = 1, stat = 'identity', color = "white") + 
+      coord_polar("y", start = 0) +
+      geom_text(aes(y = lab.ypos, label = paste0(round(probs), "%")), 
+                                                 color = "white", size = 16) +
+      scale_fill_manual(values = mycols) +
+      theme_void()
+    
     
   })
   

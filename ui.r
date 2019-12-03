@@ -155,19 +155,29 @@ dashboardPage(
         tabName = "predictor",
         sidebarLayout(
           sidebarPanel(
-            checkboxGroupInput("demStates", "Blue States",
-                               sumStateData_joined$state,
-                               selected = sumStateData_joined$state[sumStateData_joined$color == "Democrat"]
-            )),
-          sidebarPanel(
-            checkboxGroupInput("repStates", "Red States ",
-                               sumStateData_joined$state,
-                               selected = sumStateData_joined$state[sumStateData_joined$color == "Republican"]
-            ))),
-        mainPanel(plotOutput("barPlot"),
-                  plotOutput("pieChart"))
-        
-      ),
+            tabsetPanel(
+              tabPanel(
+                "Blue States",
+                checkboxGroupInput("demStates", " ",
+                                   sumStateData_joined$state,
+                                   selected = sumStateData_joined$state[sumStateData_joined$color == "Democrat"]
+                )),
+              tabPanel(
+                "Red States",
+                checkboxGroupInput("repStates", " ",
+                                   sumStateData_joined$state,
+                                   selected = sumStateData_joined$state[sumStateData_joined$color == "Republican"]
+                )))),
+
+        mainPanel(
+          plotOutput("pieChart"),
+          plotOutput("barPlot")
+          # tabsetPanel(
+          #   tabPanel("Electoral Votes Chart", plotOutput("barPlot")),
+          #   tabPanel("Prediction Results", plotOutput("pieChart"))
+          # )
+          )
+      )),
       
       # Code for the about page
       tabItem(
