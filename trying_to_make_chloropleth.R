@@ -18,20 +18,16 @@ states2016 <- data.frame(
 )
 states2016$popupText <- paste(strong("State:"), states2016$place, br(), 
                               strong("Winning Party:"), states2016$party, br(),
-                              strong("Electoral College Votes:"), states2016$votes, br(),
+                              strong("Electoral Votes:"), states2016$votes, br(),
                               strong("Population:"), states2016$popul)
 statesGEO@data <- 
   statesGEO@data %>%
   left_join(states2016, by = c("NAME" = "place"))
 
 
-#Trying to create labels to popup when mouse hovers over state polygons:
-labels <- statesGEO@data$popupText
-
-
 # To pull-up visualization of State Chloropleth Map
 leaflet(statesGEO) %>%
-  setView(-96, 37.8, 4) %>%
+  setView(-98.483330, 38.712046, 4) %>%
   addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
               opacity = 1.0, fillOpacity = 0.5,
               fillColor = ~colorFactor(c("blue", "red"), statesGEO@data$party)(statesGEO@data$party),
@@ -39,12 +35,6 @@ leaflet(statesGEO) %>%
                 highlightOptions(
                   color = "white", 
                   weight = 2, 
-                  bringToFront = TRUE)) %>% 
-  addTiles() %>% 
-  addMarkers(statesGEO, lng = statesGEO@data$lon, lat = statesGEO@data$lat, popup = statesGEO@data$popupText, data = statesGEO@data)
+                  bringToFront = TRUE),
+              popup = statesGEO@data$popupText)
 
-
-
-# To cut out "LSAD" empty column
-drop <- c("LSAD")
-data_states2016 = statesGEO@data[,!(names(statesGEO@data) %in% drop)]

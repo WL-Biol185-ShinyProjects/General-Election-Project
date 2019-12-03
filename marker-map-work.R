@@ -14,12 +14,7 @@ states2016 <- data.frame(
 
 states2016$popupText <- paste(strong("State:"), states2016$place, br(), 
                           strong("Winning Party:"), states2016$party, br(),
-                          strong("Electoral College Votes:"), states2016$votes, br(),
+                          strong("Electoral Votes:"), states2016$votes, br(),
                           strong("Population:"), states2016$popul)
 
-leaflet(data = states2016) %>% 
-  setView(lng = -97.3375397, lat = 37.6922417, zoom = 3.4) %>% 
-  addTiles() %>% 
-  addMarkers(popup = ~popupText) %>% 
-  addProviderTiles(providers$Wikimedia) # "providers$..." to specify map style  
 
