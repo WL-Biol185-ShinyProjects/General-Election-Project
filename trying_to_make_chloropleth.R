@@ -1,6 +1,5 @@
 library(leaflet)
 library(htmltools)
-library(geojson)
 library(rgdal)
 library(tidyverse)
 
@@ -37,4 +36,3 @@ leaflet(statesGEO) %>%
                   weight = 2, 
                   bringToFront = TRUE),
               popup = statesGEO@data$popupText)
-
