@@ -1,0 +1,51 @@
+state,state_po,repWins,demWins,color,electoralVotesNumber,Pop,winner
+Alaska,AK,11,0,Republican,3,735720,republican
+Alabama,AL,10,1,Republican,9,4898246,none
+Arkansas,AR,8,3,Republican,6,3026412,none
+Arizona,AZ,10,1,Swing State,11,7275070,none
+California,CA,4,7,Democrat,55,39747267,democrat
+Colorado,CO,7,4,Democrat,9,5770545,none
+Connecticut,CT,4,7,Democrat,7,3567871,none
+Delaware,DE,3,8,Democrat,3,975033,republican
+Florida,FL,7,4,Swing State,29,21646155,democrat
+Georgia,GA,8,3,Republican,16,10627767,none
+Hawaii,HI,1,10,Democrat,4,1416589,republican
+Iowa,IA,5,6,Swing State,6,3167997,none
+Idaho,ID,11,0,Republican,4,1790182,republican
+Illinois,IL,4,7,Democrat,20,12700381,none
+Indiana,IN,10,1,Republican,11,6718616,none
+Kansas,KS,11,0,Republican,6,2910931,none
+Kentucky,KY,8,3,Republican,8,4484047,none
+Louisiana,LA,8,3,Republican,8,4652581,none
+Massachusetts,MA,2,9,Democrat,11,6939373,none
+Maryland,MD,2,9,Democrat,10,6062917,none
+Maine,ME,4,7,Democrat,4,1342097,republican
+Michigan,MI,5,6,Swing State,16,10020472,none
+Minnesota,MN,0,11,Swing State,10,5655925,none
+Missouri,MO,7,4,Republican,10,6147861,none
+Mississippi,MS,10,1,Republican,6,2987895,none
+Montana,MT,10,1,Republican,3,1074532,republican
+North Carolina,NC,9,2,Swing State,15,10497741,none
+North Dakota,ND,11,0,Republican,3,760900,republican
+Nebraska,NE,11,0,Republican,5,1940919,none
+New Hampshire,NH,5,6,Swing State,4,1363852,republican
+New Jersey,NJ,4,7,Democrat,14,8922547,none
+New Mexico,NM,5,6,Democrat,5,2096034,none
+Nevada,NV,6,5,Democrat,6,3087025,none
+New York,NY,1,10,Democrat,29,19491339,democrat
+Ohio,OH,6,5,Swing State,18,11718568,none
+Oklahoma,OK,8,3,Republican,7,3948950,none
+Oregon,OR,3,8,Democrat,7,4245901,none
+Pennsylvania,PA,4,7,Swing State,20,12813969,none
+Rhode Island,RI,1,10,Democrat,4,1056738,republican
+South Carolina,SC,10,1,Republican,9,5147111,none
+South Dakota,SD,11,0,Republican,3,892631,republican
+Tennessee,TN,8,3,Republican,11,6833793,none
+Texas,TX,10,1,Republican,38,29087070,democrat
+Utah,UT,11,0,Republican,6,3221610,none
+Virginia,VA,8,3,Swing State,13,8571946,none
+Vermont,VT,4,7,Democrat,3,627180,republican
+Washington,WA,3,8,Democrat,12,7666343,none
+Wisconsin,WI,3,8,Swing State,10,5832661,none
+West Virginia,WV,6,5,Republican,5,1791951,none
+Wyoming,WY,11,0,Republican,3,572381,republican

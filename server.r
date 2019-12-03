@@ -3,6 +3,11 @@ library(ggplot2)
 library(tidyverse)
 library(scales)
 
+
+
+sumStateData_joined <- read_csv('state_prob_join')
+sumStateData <- read_csv('state_data')
+
 function(input, output, session) {
   
   
@@ -77,13 +82,31 @@ function(input, output, session) {
   })
   
   output$barPlot <- renderPlot({
+    
+    # loads the interactive table into the range of the bar plot
     displayTable <- updateTable()
+    
+    # Specify the data of interest and which columns are of interest
+    # We put color as the x variable and the electoral votes as the y variable
+    # we also fill the bar chart based on the color(democrat, republican, swingstate)
     ggplot(displayTable, aes(color, electoralVotesNumber, fill=color)) +
+      
+      # specify bar chart 
       geom_bar(stat = "identity") +
+      
+      # specify what to color each party
       scale_fill_manual(values = c("blue", "red", "darkgrey")) +
+      
+      # give it a title
       ggtitle("Total Electoral Votes for each Party") +
+      
+      # give it a y-label
       ylab("Total Electoral Votes") +
+      
+      # give it an x label
       xlab("Declaration") +
+      
+      # change some style features like the size of the plot and the background color
       theme(plot.title = element_text(hjust = 0.5, size = 24), 
           legend.background = element_rect(fill = "white", size = 0.5, 
                                            linetype = "solid", 
@@ -91,25 +114,20 @@ function(input, output, session) {
   })
   
   output$pieChart <- renderPlot({
-    displayTable <- updateTable()
-    # print(displayTable)
-    # demStates <- input$demStates
-    # repStates <- input$repStates
     
-    # creates a dictionary  of the state and its electoral vote
-    # swingStates <- 51 - length(demStates) - length(repStates)
-    # state_ev_list <- list()
-    # for (i in 1:length(swingStates)){
+    # loads the interactive table into the range of the pie chart
+    displayTable <- updateTable()
+    
+    # creates a list with a state as a key and their number of electoral votes as the value
     state_ev_list <- list(state=displayTable$state[displayTable$color == "Swing state"],
                           ev=displayTable$electoralVotesNumber[displayTable$color == "Swing state"])
-    # }
-    # print(state_ev_list)
+
     #algorithm for calculating the probability
-    
     #count is the variable indicating which instance has electoral votes over 270
     demCount <- 0
     repCount <- 0
-    #10000 iterations
+   
+     #10000 iterations
     for (i in seq(1:10000)) {
       
       # will possibly make changes to the type of distribution n is taken from
@@ -124,7 +142,7 @@ function(input, output, session) {
       # checks to see is the sampling has over 270 electoral votes
       if (summation > (270 - sum(displayTable$electoralVotesNumber[displayTable$color == "Republican"]))){
         
-        # increments the count
+        # increments the rep count
         repCount <- repCount + 1
       }
       
@@ -133,20 +151,23 @@ function(input, output, session) {
     # computes the probability the election going a certain way
     repProbability <- repCount / 10000
     
-    # computes the probability the election going a certain way
+    # computes the democratic probability the election going a certain way
     demProbability <- 1 - repProbability
     
-    # Code to create and format the pie chart
+    # Creates a data frame that will fed into the pie chart
     probData <- data.frame(probs = c((demProbability*100), (repProbability*100)),
-                            Party = c("Democrats", "Republican"))
+                            party = c("Democrats", "Republican"))
     
+    
+    # creating a new column in prob data so that we can place the percentage in the chart
     probData <- probData %>%
-                arrange(desc(Party)) %>%
+                arrange(desc(party)) %>%
                 mutate(lab.ypos = cumsum(probs) - 0.5*probs)
+    
     
     mycols <-c("#0000FF", "#FF0000")
     
-    ggplot(probData, aes(x="", y = probs, fill=Party)) +
+    ggplot(probData, aes(x="", y = probs, fill=party)) +
       geom_bar(width = 1, stat = 'identity', color = "white") + 
       coord_polar("y", start = 0) +
       geom_text(aes(y = lab.ypos, label = paste0(round(probs), "%")), 
