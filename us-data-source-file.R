@@ -25,21 +25,12 @@ stateData[is.na(stateData)] <- "other"
 
 stateData <- select(stateData, c("year", "state", "state_po", "party", 
                                  "candidatevotes"))
-
 stateData <- aggregate(candidatevotes~year+state+party+state_po, 
                        data = stateData, FUN = sum)
-
 stateData <- spread(stateData, party, candidatevotes)
-
 stateData$repWins <- 0
 stateData$repWins[(stateData$republican > stateData$democrat) & 
                       (stateData$republican > stateData$other)] <- 1
-
-
-
-#stateData$repWins <- stateData$repWins - 6
-
-
 sumStateData <- aggregate(repWins~state+state_po, data = stateData, FUN = sum)
 sumStateData$demWins <- 11 - sumStateData$repWins
 
@@ -111,4 +102,26 @@ sumStateData_joined %>%
 
 # Gets electoral votes for states up for grabs
 probabilityData[which(probabilityData[,4] == "none"), 2]
+
+
+
+ sumStateData$changeOfWins <- sumStateData$repWins - sumStateData$demWins
+
+ # sumStateData %>%
+   ggplot(sumStateData, aes(x = reorder(state_po, -changeOfWins), y = changeOfWins,
+              fill = color)) +
+   geom_bar(stat = "identity")  +
+   ggtitle("Net Party Victories by State
+           (Colored with most recent 2020 election predictions)") +
+   ylab("Net Victories by Party") +
+   xlab("States") +
+   scale_fill_manual(values = c("blue", "red", "grey")) +
+   theme(plot.title = element_text(hjust = 0.5, size = 24),
+         legend.background = element_rect(fill = "white", size = 0.5,
+                                          linetype = "solid", colour = 'black'),
+         axis.text.x = element_text(angle = 30, hjust = 0.5, vjust = 0.8),
+         axis.title.x = element_text(size = 18),
+         axis.title.y = element_text(size = 18)
+         ) +
+   labs(fill = "Color:")
 

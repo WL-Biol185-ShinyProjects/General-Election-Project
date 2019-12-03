@@ -1,27 +1,48 @@
 library(shiny)
+library(ggplot2)
 library(tidyverse)
-library(lubridate)
-library(stringi)
-library(readr)
-
 
 function(input, output, session) {
   
   
-  # output$states <- DT::renderDataTable({
-  # 
-  #   
-  #   input$repStates <- filter(sumStateData, color == "Republican" & color == "Swing State")
-  #   
-  #   input$demStates <- filter(sumStateData, color == "Democrat" & color == "Swing State")
-  #   
-  #   
-  # observe({
-  #   
-  #   updateCheckboxGroupInput(session, "blue", )
-  #   
-  # })
-  # 
+  # This code takes the window height from the ui code and saves it as numeric
+  plotCount <- reactive({
+    req(input$srsHeight)
+    as.numeric(input$srsHeight)
+  })
+  
+  # Here we define a plot height that will be used to dynamically 
+  # set our plot height
+  plotHeight <- reactive(0.85 * plotCount())
+  
+  # The ouput plot for the party victories summary tab
+
+  
+  output$sumStateData <- renderPlot(height = plotHeight, {
+ 
+    sumStateData %>% 
+      ggplot(aes(x = reorder(state_po, -changeOfWins), y = changeOfWins, 
+                 fill = color)) + 
+      geom_bar(stat = "identity")  +
+      ggtitle("        Net Party Victories by State since 1976
+          (Colored with most recent 2020 election predictions)") +
+      ylab("Net Victories by Party") +
+      xlab("States") +
+      scale_fill_manual(values = c("blue", "red", "grey")) +
+      theme(plot.title = element_text(hjust = 0.5, size = 24), 
+            legend.background = element_rect(fill = "white", size = 0.5, 
+                                             linetype = "solid", 
+                                             color = 'black'),
+            legend.text = element_text(size = 16),
+            legend.title = element_text(size = 18),
+            axis.text.x = element_text(angle = 40, hjust = 0.5, vjust = 0.8,
+                                       size = 14), 
+            axis.title.x = element_text(size = 18),
+            axis.title.y = element_text(size = 18)
+      ) +
+      labs(fill = "Color:") 
+  })
+  
   observe({
     
     updateCheckboxGroupInput(session, "repStates", 
@@ -48,21 +69,21 @@ function(input, output, session) {
       sumStateData_joined$color[sumStateData_joined$state == repStates[i]] <- "Republican"
     }
     for (i in 1:numDemStates){
-    sumStateData_joined$color[sumStateData_joined$state == demStates[i]] <- "Democrat"
+      sumStateData_joined$color[sumStateData_joined$state == demStates[i]] <- "Democrat"
     }
-
+    
     return(sumStateData_joined)
   })
-
+  
   output$barPlot <- renderPlot({
     displayTable <- updateTable()
     ggplot(displayTable, aes(color, electoralVotesNumber, fill=color)) +
       geom_bar(stat = "identity")
   })
-
+  
   output$pieChart <- renderPlot({
     displayTable <- updateTable()
-    print(displayTable)
+    # print(displayTable)
     # demStates <- input$demStates
     # repStates <- input$repStates
     
@@ -70,18 +91,18 @@ function(input, output, session) {
     # swingStates <- 51 - length(demStates) - length(repStates)
     # state_ev_list <- list()
     # for (i in 1:length(swingStates)){
-      state_ev_list <- list(state=displayTable$state[displayTable$color == "Swing state"],
-                            ev=displayTable$electoralVotesNumber[displayTable$color == "Swing state"])
+    state_ev_list <- list(state=displayTable$state[displayTable$color == "Swing state"],
+                          ev=displayTable$electoralVotesNumber[displayTable$color == "Swing state"])
     # }
-    print(state_ev_list)
+    # print(state_ev_list)
     #algorithm for calculating the probability
-
+    
     #count is the variable indicating which instance has electoral votes over 270
     demCount <- 0
     repCount <- 0
     #10000 iterations
     for (i in seq(1:10000)) {
-
+      
       #will possibly make changes to the type of distribution n is taken from
       # where n is the number of states selected in each sampling
       number <- runif(1,min=1, max=length(state_ev_list$ev))
@@ -90,36 +111,36 @@ function(input, output, session) {
       #code for sampling the vector of electoral votes
       sampling <- sample(state_ev_list$ev, as.integer(number))
       summation <- sum(sampling)
-
+      
       #checks to see is the sampling has over 270 electoral votes
       if (summation > (270 - sum(displayTable$electoralVotesNumber[displayTable$color == "Republican"]))){
-
+        
         #increments the count
         repCount <- repCount + 1
       }
-    
-    #checks to see is the sampling has over 270 electoral votes
-    if (summation > (270 - sum(displayTable$electoralVotesNumber[displayTable$color == "Democrat"]))) {
       
-      #increments the count
-      demCount <- demCount + 1
+      #checks to see is the sampling has over 270 electoral votes
+      if (summation > (270 - sum(displayTable$electoralVotesNumber[displayTable$color == "Democrat"]))) {
+        
+        #increments the count
+        demCount <- demCount + 1
+      }
     }
-  }
-  
-  #computes the probability the election going a certain way
-  demProbability <- demCount / 10000
-  
-  #computes the probability the election going a certain way
-  repProbability <- repCount / 10000
-   
-  dataframe <- data.frame(probs = c((demProbability*100), (repProbability*100)),
-                          labels = c("Democrats", "Republican"))
-
+    
+    #computes the probability the election going a certain way
+    demProbability <- demCount / 10000
+    
+    #computes the probability the election going a certain way
+    repProbability <- repCount / 10000
+    
+    dataframe <- data.frame(probs = c((demProbability*100), (repProbability*100)),
+                            labels = c("Democrats", "Republican"))
+    
     ggplot(dataframe, aes(x="", y=probs, fill=labels))+
       geom_bar(stat = "identity") +
       coord_polar("y", start=0)
-
+    
   })
-
-   }
+  
+}
   
