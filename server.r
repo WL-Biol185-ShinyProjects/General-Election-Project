@@ -104,7 +104,7 @@ function(input, output, session) {
     #10000 iterations
     for (i in seq(1:10000)) {
       
-      #will possibly make changes to the type of distribution n is taken from
+      # will possibly make changes to the type of distribution n is taken from
       # where n is the number of states selected in each sampling
       number <- runif(1,min=1, max=length(state_ev_list$ev))
       as.integer(number)
@@ -113,30 +113,22 @@ function(input, output, session) {
       sampling <- sample(state_ev_list$ev, as.integer(number))
       summation <- sum(sampling)
       
-      #checks to see is the sampling has over 270 electoral votes
+      # checks to see is the sampling has over 270 electoral votes
       if (summation > (270 - sum(displayTable$electoralVotesNumber[displayTable$color == "Republican"]))){
         
-        #increments the count
+        # increments the count
         repCount <- repCount + 1
       }
       
-      # #checks to see is the sampling has over 270 electoral votes
-      # if (summation > (270 - sum(displayTable$electoralVotesNumber[displayTable$color == "Democrat"]))) {
-      #   
-      #   #increments the count
-      #   demCount <- demCount + 1
-      # }
     }
     
-    #computes the probability the election going a certain way
+    # computes the probability the election going a certain way
     repProbability <- repCount / 10000
     
-    #computes the probability the election going a certain way
+    # computes the probability the election going a certain way
     demProbability <- 1 - repProbability
     
-    print(demProbability*100)
-    print(repProbability*100)
-    
+    # Code to create and format the pie chart
     probData <- data.frame(probs = c((demProbability*100), (repProbability*100)),
                             Party = c("Democrats", "Republican"))
     
@@ -152,7 +144,12 @@ function(input, output, session) {
       geom_text(aes(y = lab.ypos, label = paste0(round(probs), "%")), 
                                                  color = "white", size = 16) +
       scale_fill_manual(values = mycols) +
-      theme_void()
+      ggtitle("The Probability Either Party Wins") +
+      theme(axis.line = element_blank(), axis.text = element_blank(),
+            axis.ticks = element_blank(), panel.grid = element_blank(),
+            axis.title.x = element_blank(), axis.title.y = element_blank(),
+            # plot.background = element_rect(inherit.blank = TRUE),
+            plot.title = element_text(hjust = 0.5, size = 24)) 
     
     
   })
