@@ -12,19 +12,19 @@ function(input, output, session) {
   
   
   # This code takes the window height from the ui code and saves it as numeric
-  plotCount <- reactive({
+  srsPlotCount <- reactive({
     req(input$srsHeight)
     as.numeric(input$srsHeight)
   })
   
   # Here we define a plot height that will be used to dynamically 
   # set our plot height
-  plotHeight <- reactive(0.85 * plotCount())
+  srsPlotHeight <- reactive(0.85 * srsPlotCount())
   
   # The ouput plot for the party victories summary tab
 
   
-  output$sumStateData <- renderPlot(height = plotHeight, {
+  output$sumStateData <- renderPlot(height = srsPlotHeight, {
  
     sumStateData %>% 
       ggplot(aes(x = reorder(state_po, -changeOfWins), y = changeOfWins, 
@@ -34,7 +34,7 @@ function(input, output, session) {
           (Colored with most recent 2020 election predictions)") +
       ylab("Net Victories by Party") +
       xlab("States") +
-      scale_fill_manual(values = c("blue", "red", "darkgrey")) +
+      scale_fill_manual(values = c("blue", "red", "#838383")) +
       theme(plot.title = element_text(hjust = 0.5, size = 24), 
             legend.background = element_rect(fill = "white", size = 0.5, 
                                              linetype = "solid", 
@@ -46,18 +46,18 @@ function(input, output, session) {
             axis.title.x = element_text(size = 18),
             axis.title.y = element_text(size = 18)
       ) +
-      labs(fill = "Color:") 
+      labs(fill = "Color ")
   })
   
   observe({
     
     updateCheckboxGroupInput(session, "repStates", 
-                             label = " ", 
+                             label = NULL, 
                              choices = setdiff(sumStateData_joined$state, input$demStates),
                              selected = setdiff(input$repStates,input$demStates))
     
     updateCheckboxGroupInput(session, "demStates", 
-                             label = " ",
+                             label = NULL,
                              choices = setdiff(sumStateData_joined$state, input$repStates),
                              selected = setdiff(input$demStates,input$repStates))
     
@@ -81,7 +81,17 @@ function(input, output, session) {
     return(sumStateData_joined)
   })
   
-  output$barPlot <- renderPlot({
+  # This code takes the window height from the ui code and saves it as numeric
+  predictorPlotCount <- reactive({
+    req(input$predictorHeight)
+    as.numeric(input$predictorHeight)
+  })
+  
+  # Here we define a plot height that will be used to dynamically 
+  # set our plot height
+  predictor1PlotHeight <- reactive(0.4 * predictorPlotCount())
+  
+  output$barPlot <- renderPlot(height = predictor1PlotHeight, {
     
     # loads the interactive table into the range of the bar plot
     displayTable <- updateTable()
@@ -95,7 +105,7 @@ function(input, output, session) {
       geom_bar(stat = "identity") +
       
       # specify what to color each party
-      scale_fill_manual(values = c("blue", "red", "darkgrey")) +
+      scale_fill_manual(values = c("blue", "red", "#838383")) +
       
       # give it a title
       ggtitle("Total Electoral Votes for each Party") +
@@ -104,16 +114,29 @@ function(input, output, session) {
       ylab("Total Electoral Votes") +
       
       # give it an x label
-      xlab("Declaration") +
+      xlab("Declaration") + labs(fill = "Color") +
       
       # change some style features like the size of the plot and the background color
       theme(plot.title = element_text(hjust = 0.5, size = 24), 
           legend.background = element_rect(fill = "white", size = 0.5, 
                                            linetype = "solid", 
-                                           color = 'black'))
+                                           color = 'black'),
+          legend.text = element_text(size = 16), 
+          legend.title = element_text(size = 20),
+          axis.title.x = element_text(size = 18),
+          axis.title.y = element_text(size = 18),
+          axis.text.x = element_text(size = 14),
+          axis.text.y = element_text(size = 14)
+      ) + scale_y_continuous(breaks = c(0, 30, 60, 90, 120, 150, 180, 210, 
+                                        240, 270)) +
+      coord_cartesian(ylim = c(0, 280))
   })
   
-  output$pieChart <- renderPlot({
+  # Here we define a plot height that will be used to dynamically 
+  # set our plot height
+  predictor2PlotHeight <- reactive(0.5 * predictorPlotCount())
+  
+  output$pieChart <- renderPlot(height = predictor2PlotHeight, {
     
     # loads the interactive table into the range of the pie chart
     displayTable <- updateTable()
@@ -183,7 +206,7 @@ function(input, output, session) {
             legend.text = element_text(size = 16), 
             legend.title = element_text(size = 20),
             plot.title = element_text(hjust = 0.5, size = 24),
-            ) 
+            ) + labs(fill = "Party")
   })
   
 }

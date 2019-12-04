@@ -158,24 +158,34 @@ dashboardPage(
             tabsetPanel(
               tabPanel(
                 "Blue States",
-                checkboxGroupInput("demStates", " ",
+                checkboxGroupInput("demStates", NULL,
                                    sumStateData_joined$state,
                                    selected = sumStateData_joined$state[sumStateData_joined$color == "Democrat"]
                 )),
               tabPanel(
                 "Red States",
-                checkboxGroupInput("repStates", " ",
+                checkboxGroupInput("repStates", NULL,
                                    sumStateData_joined$state,
                                    selected = sumStateData_joined$state[sumStateData_joined$color == "Republican"]
                 )))),
 
         mainPanel(
           plotOutput("pieChart"),
-          plotOutput("barPlot")
-          # tabsetPanel(
-          #   tabPanel("Electoral Votes Chart", plotOutput("barPlot")),
-          #   tabPanel("Prediction Results", plotOutput("pieChart"))
-          # )
+          plotOutput("barPlot"),
+          
+          # This code is used to find the height of the window on launch and
+          # whenever the size of the window changes
+          tags$head(tags$script('
+                              var predictorHeight = 0;
+                              $(document).on("shiny:connected", function(e) {
+                                  predictorHeight = window.innerHeight;
+                                  Shiny.onInputChange("predictorHeight", predictorHeight);
+                              });
+                              $(window).resize(function(e) {
+                                  srsHeight = window.innerHeight;
+                                  Shiny.onInputChange("predictorHeight", predictorHeight);
+                              });
+                            '))
           )
       )),
       
