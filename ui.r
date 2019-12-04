@@ -130,6 +130,21 @@ dashboardPage(
                  
           ))),
       
+      # Code for the Nationwide Map
+      tabItem(
+        tabName = "nationMap",
+
+        fluidRow(
+          column(2, offset = 1,
+            selectInput('yearID', 'Choose a year:', rev(nationwideMapData$Year), 
+                        selectize=TRUE, selected = TRUE)
+          ),
+          column(12,
+            leafletOutput("nationwideMap", height = 600)
+          ) 
+        )
+      ),
+      
       # Code for the State Summary Results page  
       tabItem(
         tabName = "srs",

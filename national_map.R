@@ -1,5 +1,5 @@
 library(leaflet)
-library(htmltools)
+#library(htmltools)
 library(rgdal)
 library(tidyverse)
 
@@ -8,22 +8,30 @@ nationwideGEO  <- rgdal::readOGR("states.geo.json")
 
 
 # Importing Excel-made data frame containing state information for each presidential election (2016-1976)
-nationwideMapData <- read.csv("nationwideMapData.csv")
+nationwideMapData <- read.csv("generalElectionSummary.csv")
 
 
 # Adding popupText to be displayed when a state is clicked on in chloropleth map
-nationwideMapData$popupText <- paste(strong("State:"), nationwideMapData$State, br(), 
-                                  strong("Electoral Votes:"), nationwideMapData$Electoral.Votes, br(),
-                                  strong("Population:"), nationwideMapData$Population)
+nationwideMapData$popupText <- paste(htmltools::strong("State:"), 
+                                     nationwideMapData$State, htmltools::br(),
+                                     htmltools::strong("Winning Party: "),
+                                     nationwideMapData$Party, htmltools::br(),
+                                     htmltools::strong("Electoral Votes:"), 
+                                     nationwideMapData$Electoral.Votes, htmltools::br(),
+                                     htmltools::strong("Population:"), 
+                                     nationwideMapData$Population, htmltools::br()
+                                  )
 
 
 # Remove Puerto Rico from nationwideGEO
 nationwideGEO@data <- nationwideGEO@data[-17,]
 nationwideGEO@polygons[[17]] <- NULL
 
+# Save the map as a csv to use in server
+write_csv(nationwideMapData, path = "nationwideMapData.csv")
 
 # This allows for different election years to be selected from drop-down menu to display corresponding election map
-nationwideMapData <- nationwideMapData[nationwideMapData$Year == "2016",]
+nationwideMapData <- nationwideMapData[nationwideMapData$Year == "1984",]
 # Changing the year following the "==" above to the desired election year will create an election map for that year
 
 

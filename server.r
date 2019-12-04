@@ -2,13 +2,46 @@ library(shiny)
 library(ggplot2)
 library(tidyverse)
 library(scales)
+library(leaflet)
+library(rgdal)
 
-
-
+nationwideData <- read_csv("nationwideMapData.csv")
 sumStateData_joined <- read_csv('state_prob_join')
 sumStateData <- read_csv('state_data')
 
 function(input, output, session) {
+  
+  # Importing required GeoSpatial data from "https://eric.clst.org/tech/usgeojson/" -> "US States 5m GeoJSON"
+  nationwideGEO  <- rgdal::readOGR("states.geo.json")
+  
+  changeYear <- reactive({
+    return(input$yearID)
+  })
+  
+  output$nationwideMap <- renderLeaflet({
+    # This allows for different election years to be selected from drop-down 
+    # menu to display corresponding election map
+    nationwideData <- nationwideMapData[nationwideMapData$Year == changeYear(),]
+    
+    # Joining self-made data frame from above into nationwideGEO geospatial 
+    # dataframe for leaflet to use for visualization
+    nationwideGEO@data <- 
+      nationwideGEO@data %>%
+      left_join(nationwideData, by = c("NAME" = "State"))
+    
+    # Create final working visualization of State Chloropleth Map!
+    leaflet(data = nationwideGEO) %>%
+      setView(-103.483330, 38.712046, 4) %>%
+      addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
+                  opacity = 1.0, fillOpacity = 0.5,
+                  fillColor = ~colorFactor(c("blue", "red"), nationwideGEO@data$Party)(nationwideGEO@data$Party),
+                  highlightOptions = 
+                    highlightOptions(
+                      color = "white", 
+                      weight = 2, 
+                      bringToFront = TRUE),
+                  popup = nationwideGEO@data$popupText)
+  })
   
   
   # This code takes the window height from the ui code and saves it as numeric
@@ -22,8 +55,6 @@ function(input, output, session) {
   srsPlotHeight <- reactive(0.85 * srsPlotCount())
   
   # The ouput plot for the party victories summary tab
-
-  
   output$sumStateData <- renderPlot(height = srsPlotHeight, {
  
     sumStateData %>% 
