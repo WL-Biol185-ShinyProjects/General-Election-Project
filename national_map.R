@@ -24,6 +24,8 @@ nationwideGEO@polygons[[17]] <- NULL
 
 # This allows for different election years to be selected from drop-down menu to display corresponding election map
 nationwideMapData <- nationwideMapData[nationwideMapData$Year == "2016",]
+# Changing the year following the "==" above to the desired election year will create an election map for that year
+    # But make sure to restart the R session prior to running the entire script once you've changed the desired year
 
 
 # Joining self-made data frame from above into nationwideGEO geospatial dataframe for leaflet to use for visualization
