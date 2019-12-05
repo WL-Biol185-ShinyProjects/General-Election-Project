@@ -2,6 +2,7 @@ library(shiny)
 library(shinydashboard)
 library(lubridate)
 library(leaflet)
+library(tidyverse)
 
 nationwideData <- read_csv("nationwideMapData.csv")
 sumStateData_joined <- read_csv('state_prob_join')

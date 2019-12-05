@@ -21,7 +21,7 @@ function(input, output, session) {
   output$nationwideMap <- renderLeaflet({
     # This allows for different election years to be selected from drop-down 
     # menu to display corresponding election map
-    nationwideData <- nationwideMapData[nationwideMapData$Year == changeYear(),]
+    nationwideData <- nationwideData[nationwideData$Year == changeYear(),]
     
     # Joining self-made data frame from above into nationwideGEO geospatial 
     # dataframe for leaflet to use for visualization
