@@ -3,6 +3,10 @@ library(shinydashboard)
 library(lubridate)
 library(leaflet)
 
+nationwideData <- read_csv("nationwideMapData.csv")
+sumStateData_joined <- read_csv('state_prob_join')
+sumStateData <- read_csv('state_data')
+
 # Creates the outline for the website
 dashboardPage(
   skin = "purple",
@@ -137,7 +141,7 @@ dashboardPage(
 
         fluidRow(
           column(2, offset = 1,
-            selectInput('yearID', 'Choose a year:', rev(nationwideMapData$Year), 
+            selectInput('yearID', 'Choose a year:', rev(nationwideData$Year), 
                         selectize=TRUE, selected = TRUE)
           ),
           column(12,
