@@ -120,7 +120,7 @@ function(input, output, session) {
   
   # Here we define a plot height that will be used to dynamically 
   # set our plot height
-  predictor1PlotHeight <- reactive(0.4 * predictorPlotCount())
+  predictor1PlotHeight <- reactive(0.5 * predictorPlotCount())
   
   output$barPlot <- renderPlot(height = predictor1PlotHeight, {
     
@@ -167,7 +167,7 @@ function(input, output, session) {
   # set our plot height
   predictor2PlotHeight <- reactive(0.5 * predictorPlotCount())
   
-  output$pieChart <- renderPlot(height = predictor2PlotHeight, {
+  output$pieChart <- renderPlot( {
     
     # loads the interactive table into the range of the pie chart
     displayTable <- updateTable()
