@@ -1,6 +1,7 @@
 library(shiny)
 library(shinydashboard)
 library(lubridate)
+library(leaflet)
 
 # Creates the outline for the website
 dashboardPage(
