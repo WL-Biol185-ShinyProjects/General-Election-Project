@@ -12,7 +12,7 @@ sumStateData <- read_csv('state_data')
 dashboardPage(
   skin = "purple",
   dashboardHeader(
-    title = strong("General Election Predictor"),
+    title = "General Election Predictor",
     titleWidth = 300
   ),
   
