@@ -30,27 +30,27 @@ nationwideGEO@polygons[[17]] <- NULL
 # Save the map as a csv to use in server
 write_csv(nationwideMapData, path = "nationwideMapData.csv")
 
-# This allows for different election years to be selected from drop-down menu to display corresponding election map
-nationwideMapData <- nationwideMapData[nationwideMapData$Year == "1984",]
-# Changing the year following the "==" above to the desired election year will create an election map for that year
-
-
-# Joining self-made data frame from above into nationwideGEO geospatial dataframe for leaflet to use for visualization
-nationwideGEO@data <- 
-  nationwideGEO@data %>%
-  left_join(nationwideMapData, by = c("NAME" = "State"))
-
-
-# Create final working visualization of State Chloropleth Map!
-leaflet(nationwideGEO) %>%
-  setView(-98.483330, 38.712046, 3) %>%
-  addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
-              opacity = 1.0, fillOpacity = 0.5,
-              fillColor = ~colorFactor(c("blue", "red"), nationwideGEO@data$Party)(nationwideGEO@data$Party),
-              highlightOptions = 
-                highlightOptions(
-                  color = "white", 
-                  weight = 2, 
-                  bringToFront = TRUE),
-              popup = nationwideGEO@data$popupText)
+# # This allows for different election years to be selected from drop-down menu to display corresponding election map
+# nationwideMapData <- nationwideMapData[nationwideMapData$Year == "1984",]
+# # Changing the year following the "==" above to the desired election year will create an election map for that year
+# 
+# 
+# # Joining self-made data frame from above into nationwideGEO geospatial dataframe for leaflet to use for visualization
+# nationwideGEO@data <- 
+#   nationwideGEO@data %>%
+#   left_join(nationwideMapData, by = c("NAME" = "State"))
+# view(nationwideGEO@polygons)
+# 
+# # Create final working visualization of State Chloropleth Map!
+# leaflet(nationwideGEO) %>%
+#   setView(-98.483330, 38.712046, 3) %>%
+#   addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
+#               opacity = 1.0, fillOpacity = 0.5,
+#               fillColor = ~colorFactor(c("blue", "red"), nationwideGEO@data$Party)(nationwideGEO@data$Party),
+#               highlightOptions = 
+#                 highlightOptions(
+#                   color = "white", 
+#                   weight = 2, 
+#                   bringToFront = TRUE),
+#               popup = nationwideGEO@data$popupText)
 
