@@ -10,12 +10,26 @@ nationwideGEO  <- rgdal::readOGR("states.geo.json")
 # Importing Excel-made data frame containing state information for each presidential election (2016-1976)
 nationwideMapData <- read.csv("generalElectionSummary.csv")
 
+stateName <- stateData$state
+stateYear <- stateData$year
+stateParty <- stateData$party
+stateCandidate <- stateData$candidate
+candidateLen <- length(stateCandidate)
+for (i in 1:candidateLen){
+  nationwideMapData$Winner[(nationwideMapData$Year == stateYear[i]) &
+                             (nationwideMapData$State == stateName[i]) &
+                             (nationwideMapData$Party == stateParty[i])] <- stateCandidate[i]
+}
+View(nationwideMapData)
+
 
 # Adding popupText to be displayed when a state is clicked on in chloropleth map
 nationwideMapData$popupText <- paste(htmltools::strong("State:"), 
                                      nationwideMapData$State, htmltools::br(),
                                      htmltools::strong("Winning Party: "),
                                      nationwideMapData$Party, htmltools::br(),
+                                     htmltools::strong("Winning Candidate: "),
+                                     nationwideMapData$Winner, htmltools::br(),
                                      htmltools::strong("Electoral Votes:"), 
                                      nationwideMapData$Electoral.Votes, htmltools::br(),
                                      htmltools::strong("Population:"), 
@@ -23,9 +37,9 @@ nationwideMapData$popupText <- paste(htmltools::strong("State:"),
                                   )
 
 
-# Remove Puerto Rico from nationwideGEO
-nationwideGEO@data <- nationwideGEO@data[-17,]
-nationwideGEO@polygons[[17]] <- NULL
+# # Remove Puerto Rico from nationwideGEO
+# nationwideGEO@data <- nationwideGEO@data[-17,]
+# nationwideGEO@polygons[[17]] <- NULL
 
 # Save the map as a csv to use in server
 write_csv(nationwideMapData, path = "nationwideMapData.csv")

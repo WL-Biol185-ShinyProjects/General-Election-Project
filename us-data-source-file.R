@@ -24,7 +24,13 @@ stateData$party[stateData$party %notin% c("democrat","republican")] <- "other"
 stateData[is.na(stateData)] <- "other"
 
 stateData <- select(stateData, c("year", "state", "state_po", "party", 
-                                 "candidatevotes"))
+                                 "candidatevotes", "candidate"))
+stateData$party[stateData$party == "republican"] <- "Republican"
+stateData$party[stateData$party == "democrat"] <- "Democrat"
+stateData <- stateData[stateData$party != "other",]
+View(stateData)
+
+
 stateData <- aggregate(candidatevotes~year+state+party+state_po, 
                        data = stateData, FUN = sum)
 stateData <- spread(stateData, party, candidatevotes)
@@ -33,6 +39,7 @@ stateData$repWins[(stateData$republican > stateData$democrat) &
                       (stateData$republican > stateData$other)] <- 1
 sumStateData <- aggregate(repWins~state+state_po, data = stateData, FUN = sum)
 sumStateData$demWins <- 11 - sumStateData$repWins
+
 
 
 
