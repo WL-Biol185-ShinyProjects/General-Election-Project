@@ -23,6 +23,7 @@ stateData$party[stateData$party %notin% c("democrat","republican")] <- "other"
 #changes values that are NA to other 
 stateData[is.na(stateData)] <- "other"
 
+
 stateData <- select(stateData, c("year", "state", "state_po", "party", 
                                  "candidatevotes", "candidate"))
 stateData$party[stateData$party == "republican"] <- "Republican"
@@ -31,15 +32,18 @@ stateData <- stateData[stateData$party != "other",]
 View(stateData)
 
 
+
 stateData <- aggregate(candidatevotes~year+state+party+state_po, 
                        data = stateData, FUN = sum)
 stateData <- spread(stateData, party, candidatevotes)
+View(stateData)
 stateData$repWins <- 0
-stateData$repWins[(stateData$republican > stateData$democrat) & 
-                      (stateData$republican > stateData$other)] <- 1
+stateData$repWins[(stateData$Republican > stateData$Democrat)] <- 1
+View(stateData)
+
 sumStateData <- aggregate(repWins~state+state_po, data = stateData, FUN = sum)
 sumStateData$demWins <- 11 - sumStateData$repWins
-
+View(stateData)
 
 
 
@@ -100,7 +104,7 @@ states
 # sumProbData <- tolower(sumProbData)
 
 sumStateData_joined <- inner_join(sumStateData, probabilityData, by = c("state" = "State" ))
-View(sumStateData_joined)
+# View(sumStateData_joined)
 
 sumStateData_joined %>%
   ggplot(aes(color, electoralVotesNumber)) +
@@ -113,6 +117,9 @@ probabilityData[which(probabilityData[,4] == "none"), 2]
 
 
  sumStateData$changeOfWins <- sumStateData$repWins - sumStateData$demWins
+ 
+ View(sumStateData)
+ View(sumStateData_joined)
 
  write_csv(sumStateData, path = 'state_data' )
  write_csv(sumStateData_joined, path = 'state_prob_join')

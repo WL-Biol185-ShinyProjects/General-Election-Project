@@ -1,52 +1,52 @@
 state,state_po,repWins,demWins,color,changeOfWins
-Alaska,AK,0,11,Democrat,-11
-Alabama,AL,0,11,Democrat,-11
-Arkansas,AR,0,11,Democrat,-11
-Arizona,AZ,0,11,Democrat,-11
-California,CA,0,11,Democrat,-11
-Colorado,CO,0,11,Democrat,-11
-Connecticut,CT,0,11,Democrat,-11
+Alaska,AK,11,0,Republican,11
+Alabama,AL,10,1,Republican,9
+Arkansas,AR,8,3,Republican,5
+Arizona,AZ,10,1,Swing State,9
+California,CA,4,7,Democrat,-3
+Colorado,CO,7,4,Democrat,3
+Connecticut,CT,4,7,Democrat,-3
 District of Columbia,DC,0,11,Democrat,-11
-Delaware,DE,0,11,Democrat,-11
-Florida,FL,0,11,Democrat,-11
-Georgia,GA,0,11,Democrat,-11
-Hawaii,HI,0,11,Democrat,-11
-Iowa,IA,0,11,Democrat,-11
-Idaho,ID,0,11,Democrat,-11
-Illinois,IL,0,11,Democrat,-11
-Indiana,IN,0,11,Democrat,-11
-Kansas,KS,0,11,Democrat,-11
-Kentucky,KY,0,11,Democrat,-11
-Louisiana,LA,0,11,Democrat,-11
-Massachusetts,MA,0,11,Democrat,-11
-Maryland,MD,0,11,Democrat,-11
-Maine,ME,0,11,Democrat,-11
-Michigan,MI,0,11,Democrat,-11
+Delaware,DE,3,8,Democrat,-5
+Florida,FL,7,4,Swing State,3
+Georgia,GA,8,3,Republican,5
+Hawaii,HI,1,10,Democrat,-9
+Iowa,IA,5,6,Swing State,-1
+Idaho,ID,11,0,Republican,11
+Illinois,IL,4,7,Democrat,-3
+Indiana,IN,10,1,Republican,9
+Kansas,KS,11,0,Republican,11
+Kentucky,KY,8,3,Republican,5
+Louisiana,LA,8,3,Republican,5
+Massachusetts,MA,2,9,Democrat,-7
+Maryland,MD,2,9,Democrat,-7
+Maine,ME,4,7,Democrat,-3
+Michigan,MI,5,6,Swing State,-1
 Minnesota,MN,0,11,Swing State,-11
-Missouri,MO,0,11,Democrat,-11
-Mississippi,MS,0,11,Democrat,-11
-Montana,MT,0,11,Democrat,-11
-North Carolina,NC,0,11,Democrat,-11
-North Dakota,ND,0,11,Democrat,-11
-Nebraska,NE,0,11,Democrat,-11
-New Hampshire,NH,0,11,Democrat,-11
-New Jersey,NJ,0,11,Democrat,-11
-New Mexico,NM,0,11,Democrat,-11
-Nevada,NV,0,11,Democrat,-11
-New York,NY,0,11,Democrat,-11
-Ohio,OH,0,11,Democrat,-11
-Oklahoma,OK,0,11,Democrat,-11
-Oregon,OR,0,11,Democrat,-11
-Pennsylvania,PA,0,11,Swing State,-11
-Rhode Island,RI,0,11,Democrat,-11
-South Carolina,SC,0,11,Democrat,-11
-South Dakota,SD,0,11,Democrat,-11
-Tennessee,TN,0,11,Democrat,-11
-Texas,TX,0,11,Democrat,-11
-Utah,UT,0,11,Democrat,-11
-Virginia,VA,0,11,Democrat,-11
-Vermont,VT,0,11,Democrat,-11
-Washington,WA,0,11,Democrat,-11
-Wisconsin,WI,0,11,Swing State,-11
-West Virginia,WV,0,11,Democrat,-11
-Wyoming,WY,0,11,Democrat,-11
+Missouri,MO,8,3,Republican,5
+Mississippi,MS,10,1,Republican,9
+Montana,MT,10,1,Republican,9
+North Carolina,NC,9,2,Swing State,7
+North Dakota,ND,11,0,Republican,11
+Nebraska,NE,11,0,Republican,11
+New Hampshire,NH,5,6,Swing State,-1
+New Jersey,NJ,4,7,Democrat,-3
+New Mexico,NM,5,6,Democrat,-1
+Nevada,NV,6,5,Democrat,1
+New York,NY,1,10,Democrat,-9
+Ohio,OH,6,5,Swing State,1
+Oklahoma,OK,11,0,Republican,11
+Oregon,OR,3,8,Democrat,-5
+Pennsylvania,PA,4,7,Swing State,-3
+Rhode Island,RI,1,10,Democrat,-9
+South Carolina,SC,10,1,Republican,9
+South Dakota,SD,11,0,Republican,11
+Tennessee,TN,8,3,Republican,5
+Texas,TX,10,1,Republican,9
+Utah,UT,11,0,Republican,11
+Virginia,VA,8,3,Swing State,5
+Vermont,VT,4,7,Democrat,-3
+Washington,WA,3,8,Democrat,-5
+Wisconsin,WI,3,8,Swing State,-5
+West Virginia,WV,6,5,Republican,1
+Wyoming,WY,11,0,Republican,11
