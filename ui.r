@@ -161,7 +161,7 @@ dashboardPage(
         fluidRow(
           column(2, offset = 1,
                  selectInput('stateYearID', 'Choose a year:', rev(statewideElectionData$year),
-                             selectize = TRUE, selected = TRUE),
+                             selectize = TRUE, selected = TRUE)
           ),
           column(2,
                  selectInput('stateID', 'Choose a state:', 

@@ -52,9 +52,7 @@ function(input, output, session) {
   
   # Reactive functions for statewide county map
   changeStateYear <- reactive({
-    # Importing geo spatial data for statewide county map
-    statewideGEO  <- rgdal::readOGR("counties.json")
-    statewideGEO@data <- statewideGEOData
+
     return(input$stateYearID)
   })
   
@@ -64,6 +62,37 @@ function(input, output, session) {
   
   # Output function for statewide county map
   output$statewideMap <- renderLeaflet({
+    # Importing geo spatial data for statewide county map
+    statewideGEO <- rgdal::readOGR("counties.json")
+    # Adding the state names to the counties table
+    stateNames <- as.character(nationwideGEO@data$NAME)
+    names(stateNames) <- as.character(nationwideGEO@data$STATE)
+    statewideGEO@data$stateName <- stateNames[as.character(statewideGEO@data$STATE)]
+    
+    
+    # Adding city tags to the geo data for the table join
+    statewideGEO@data$city <- 0
+    statewideGEO@data$city[(statewideGEO@data$NAME == statewideGEO@data[1857,]$NAME) &
+                             (statewideGEO@data$stateName == statewideGEO@data[1857,]$stateName) &
+                             (statewideGEO@data$LSAD == statewideGEO@data[1857,]$LSAD)] <- 1
+    statewideGEO@data$city[(statewideGEO@data$NAME == statewideGEO@data[2223,]$NAME) &
+                             (statewideGEO@data$stateName == statewideGEO@data[2223,]$stateName) &
+                             (statewideGEO@data$LSAD == statewideGEO@data[2223,]$LSAD)] <- 1
+    statewideGEO@data$city[(statewideGEO@data$NAME == statewideGEO@data[2910,]$NAME) &
+                             (statewideGEO@data$stateName == statewideGEO@data[2910,]$stateName) &
+                             (statewideGEO@data$LSAD == statewideGEO@data[2910,]$LSAD)] <- 1
+    statewideGEO@data$city[(statewideGEO@data$NAME == statewideGEO@data[926,]$NAME) &
+                             (statewideGEO@data$stateName == statewideGEO@data[926,]$stateName) &
+                             (statewideGEO@data$LSAD == statewideGEO@data[926,]$LSAD)] <- 1
+    statewideGEO@data$city[(statewideGEO@data$NAME == statewideGEO@data[2911,]$NAME) &
+                             (statewideGEO@data$stateName == statewideGEO@data[2911,]$stateName) &
+                             (statewideGEO@data$LSAD == statewideGEO@data[2911,]$LSAD)] <- 1
+    statewideGEO@data$city[(statewideGEO@data$NAME == statewideGEO@data[2947,]$NAME) &
+                             (statewideGEO@data$stateName == statewideGEO@data[2947,]$stateName) &
+                             (statewideGEO@data$LSAD == statewideGEO@data[2947,]$LSAD)] <- 1
+    statewideGEO@data$city[(statewideGEO@data$NAME == statewideGEO@data[937,]$NAME) &
+                             (statewideGEO@data$stateName == statewideGEO@data[937,]$stateName) &
+                             (statewideGEO@data$LSAD == statewideGEO@data[937,]$LSAD)] <- 1
 
     # Specify the year
     statewideElectionData <- statewideElectionData[statewideElectionData$year == changeStateYear(),]
@@ -72,7 +101,7 @@ function(input, output, session) {
     statePoly <- which(statewideGEO@data$stateName != changeState())
     stateLen <- length(statePoly)
     counter <- 0
-
+    print(stateLen)
     for (i in 1:stateLen){
       statewideGEO@polygons[[statePoly[i] - counter]] <- NULL
       counter <- counter + 1
@@ -80,6 +109,9 @@ function(input, output, session) {
     counter <- 0
     statewideGEO@data <- statewideGEO@data[statewideGEO@data$stateName == changeState(),]
     statewideElectionData$city <- as.numeric(statewideElectionData$city)
+    changeLevel <- levels(statewideGEO@data$NAME)
+    statewideElectionData$county[statewideElectionData$county == "Do<f1>a Ana"] <- changeLevel[514]
+    print(changeLevel[514])
     statewideElectionData$county <- factor(statewideElectionData$county, levels = levels(statewideGEO@data$NAME))
     
     # join the election data and the json data

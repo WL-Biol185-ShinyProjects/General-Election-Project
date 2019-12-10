@@ -54,9 +54,6 @@ countyElectionData$popupText <- paste(htmltools::strong("County:"),
                                      countyElectionData$winner, htmltools::br()
 )
 
-selectStates <- unique(countyElectionData$state[countyElectionData$state != "Alaska"])
-
-write_csv(selectStates, "selectStates.csv")
 write_csv(countyElectionData, "statewideElectionData.csv")
 write_csv(nationwideGEO@data, "statewideGEOData.csv")
 
@@ -72,7 +69,7 @@ stateCoords <- data.frame(
               45.240459, 39.849457, 39.849426, 42.011539, 38.526600, 37.668140,
               31.169546, 45.293947, 38.903946, 42.230171, 44.326618, 45.994454,
               32.741646, 38.456085, 46.721925, 41.325370, 38.313515, 43.952492,
-              40.098904, 34.240515, 42.565726, 35.630066, 47.528912, 40.388783,
+              40.098904, 34.240515, 42.905726, 35.630066, 47.528912, 40.388783,
               35.565342, 44.072021, 40.990752, 41.680893, 33.856892, 44.299782,
               35.747845, 31.054487, 39.550032, 43.845876, 37.769337, 47.400902,
               38.491226, 44.768543, 42.755966)
@@ -109,14 +106,14 @@ write_csv(stateCoords, "stateCoords.csv")
 
 
 # Selects the state specified by user
-statePoly <- which(statewideGEO@data$stateName != "Connecticut")
+statePoly <- which(statewideGEO@data$stateName != "New Mexico")
 stateLen <- length(statePoly)
 counter <- 0
 for (i in 1:stateLen){
   statewideGEO@polygons[[statePoly[i] - counter]] <- NULL
   counter <- counter + 1
 }
-statewideGEO@data <- statewideGEO@data[statewideGEO@data$stateName == "Connecticut",]
+statewideGEO@data <- statewideGEO@data[statewideGEO@data$stateName == "New Mexico",]
 countyElectionData$city <- as.numeric(countyElectionData$city)
 countyElectionData$county <- factor(countyElectionData$county, levels = levels(statewideGEO@data$NAME))
 
@@ -127,9 +124,9 @@ statewideGEO@data <-
                                          "NAME" = "county", "city"))
 
 # Grab state specific values for setview
-currentLong <- stateCoords$lon[stateCoords$state == "Connecticut"]
-currentLat <- stateCoords$lat[stateCoords$state == "Connecticut"]
-currentZoom <- stateCoords$zoom[stateCoords$state == "Connecticut"]
+currentLong <- stateCoords$lon[stateCoords$state == "New Mexico"]
+currentLat <- stateCoords$lat[stateCoords$state == "New Mexico"]
+currentZoom <- stateCoords$zoom[stateCoords$state == "New Mexico"]
 
 # Organize the color
 colors <- c("red")

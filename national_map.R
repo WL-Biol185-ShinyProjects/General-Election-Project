@@ -9,6 +9,7 @@ nationwideGEO  <- rgdal::readOGR("states.geo.json")
 
 # Importing Excel-made data frame containing state information for each presidential election (2016-1976)
 nationwideMapData <- read.csv("generalElectionSummary.csv")
+stateData <- nationwideMapData
 
 stateName <- stateData$state
 stateYear <- stateData$year
