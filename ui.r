@@ -7,6 +7,11 @@ library(tidyverse)
 nationwideData <- read_csv("nationwideMapData.csv")
 sumStateData_joined <- read_csv('state_prob_join')
 sumStateData <- read_csv('state_data')
+statewideElectionData <- read_csv("statewideElectionData.csv")
+stateCoords <- read_csv("stateCoords.csv")
+statewideGEOData <- read_csv("statewideGEOData.csv")
+states <- statewideElectionData$state[statewideElectionData$state != "Alaska"]
+states <- states[states != "District of Columbia"]
 
 # Creates the outline for the website
 dashboardPage(
@@ -139,14 +144,31 @@ dashboardPage(
       # Code for the Nationwide Map
       tabItem(
         tabName = "nationMap",
-
         fluidRow(
           column(2, offset = 1,
-            selectInput('yearID', 'Choose a year:', rev(nationwideData$Year), 
+            selectInput('nationYearID', 'Choose a year:', rev(nationwideData$Year), 
                         selectize=TRUE, selected = TRUE)
           ),
           column(12,
             leafletOutput("nationwideMap", height = 600)
+          ) 
+        )
+      ),
+      
+      # Code for the Statewide Map
+      tabItem(
+        tabName = "stateMap",
+        fluidRow(
+          column(2, offset = 1,
+                 selectInput('stateYearID', 'Choose a year:', rev(statewideElectionData$year),
+                             selectize = TRUE, selected = TRUE),
+          ),
+          column(2,
+                 selectInput('stateID', 'Choose a state:', 
+                             states, selectize = TRUE, selected = TRUE)
+          ),
+          column(12,
+                 leafletOutput("statewideMap", height = 600)
           ) 
         )
       ),

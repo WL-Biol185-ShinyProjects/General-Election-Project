@@ -8,20 +8,25 @@ library(rgdal)
 nationwideData <- read_csv("nationwideMapData.csv")
 sumStateData_joined <- read_csv('state_prob_join')
 sumStateData <- read_csv('state_data')
+statewideElectionData <- read_csv("statewideElectionData.csv")
+stateCoords <- read_csv("stateCoords.csv")
+statewideGEOData <- read_csv("statewideGEOData.csv")
 
 function(input, output, session) {
   
   # Importing required GeoSpatial data from "https://eric.clst.org/tech/usgeojson/" -> "US States 5m GeoJSON"
   nationwideGEO  <- rgdal::readOGR("states.geo.json")
   
-  changeYear <- reactive({
-    return(input$yearID)
+  # Reactive function for nationwide state map
+  changeNationYear <- reactive({
+    return(input$nationYearID)
   })
   
+  # Output function for nationwide state map
   output$nationwideMap <- renderLeaflet({
     # This allows for different election years to be selected from drop-down 
     # menu to display corresponding election map
-    nationwideData <- nationwideData[nationwideData$Year == changeYear(),]
+    nationwideData <- nationwideData[nationwideData$Year == changeNationYear(),]
     
     # Joining self-made data frame from above into nationwideGEO geospatial 
     # dataframe for leaflet to use for visualization
@@ -41,6 +46,75 @@ function(input, output, session) {
                       weight = 2, 
                       bringToFront = TRUE),
                   popup = nationwideGEO@data$popupText)
+  })
+  
+
+  
+  # Reactive functions for statewide county map
+  changeStateYear <- reactive({
+    # Importing geo spatial data for statewide county map
+    statewideGEO  <- rgdal::readOGR("counties.json")
+    statewideGEO@data <- statewideGEOData
+    return(input$stateYearID)
+  })
+  
+  changeState <- reactive({
+    return(input$stateID)
+  })
+  
+  # Output function for statewide county map
+  output$statewideMap <- renderLeaflet({
+
+    # Specify the year
+    statewideElectionData <- statewideElectionData[statewideElectionData$year == changeStateYear(),]
+    
+    # Selects the state specified by user
+    statePoly <- which(statewideGEO@data$stateName != changeState())
+    stateLen <- length(statePoly)
+    counter <- 0
+
+    for (i in 1:stateLen){
+      statewideGEO@polygons[[statePoly[i] - counter]] <- NULL
+      counter <- counter + 1
+    }
+    counter <- 0
+    statewideGEO@data <- statewideGEO@data[statewideGEO@data$stateName == changeState(),]
+    statewideElectionData$city <- as.numeric(statewideElectionData$city)
+    statewideElectionData$county <- factor(statewideElectionData$county, levels = levels(statewideGEO@data$NAME))
+    
+    # join the election data and the json data
+    statewideGEO@data <-
+      statewideGEO@data %>% 
+      left_join(statewideElectionData, by = c("stateName" = "state", 
+                                           "NAME" = "county", "city"))
+    
+    # Grab state specific values for setview
+    currentLong <- stateCoords$lon[stateCoords$state == changeState()]
+    currentLat <- stateCoords$lat[stateCoords$state == changeState()]
+    currentZoom <- stateCoords$zoom[stateCoords$state == changeState()]
+    
+    # Organize the color
+    colors <- c("red")
+    if (statewideGEO@data$party[1] == "Democrat"){
+      colors <- c("blue")
+    }
+    if (length(unique(statewideGEO@data$party)) > 1){
+      colors <- c("blue", "grey", "red")
+    }
+    
+    # Create final working visualization of State Chloropleth Map!
+    leaflet(statewideGEO) %>%
+      setView(currentLong, currentLat, currentZoom) %>%
+      addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
+                  opacity = 1.0, fillOpacity = 0.5,
+                  fillColor = ~colorFactor(colors, statewideGEO@data$party)(statewideGEO@data$party),
+                  highlightOptions =
+                    highlightOptions(
+                      color = "white",
+                      weight = 2,
+                      bringToFront = TRUE),
+                  popup = statewideGEO@data$popupText)
+    
   })
   
   

@@ -54,6 +54,12 @@ countyElectionData$popupText <- paste(htmltools::strong("County:"),
                                      countyElectionData$winner, htmltools::br()
 )
 
+selectStates <- unique(countyElectionData$state[countyElectionData$state != "Alaska"])
+
+write_csv(selectStates, "selectStates.csv")
+write_csv(countyElectionData, "statewideElectionData.csv")
+write_csv(nationwideGEO@data, "statewideGEOData.csv")
+
 
 # specify the year
 countyElectionData <- countyElectionData[countyElectionData$year == "2016",]
@@ -97,41 +103,35 @@ stateCoords <- data.frame(
                "West Virginia", "Wisconsin", "Wyoming")
 )
 
-
-# View(stateCoords)
-
-
-# Remove Puerto Rico & Alaska from statewideGEO
+stateCoords$zoom <- stateCoords$zoom + 1
+View(stateCoords)
+write_csv(stateCoords, "stateCoords.csv")
 
 
-alaskaPoly <- which(statewideGEO@data$stateName != "Connecticut")
-alaskaLen <- length(alaskaPoly)
-# prPoly <- which(statewideGEO@data$stateName == "Puerto Rico")
-# prLen <- length(prPoly)
+# Selects the state specified by user
+statePoly <- which(statewideGEO@data$stateName != "Connecticut")
+stateLen <- length(statePoly)
 counter <- 0
-
- 
-for (i in 1:alaskaLen){
-  statewideGEO@polygons[[alaskaPoly[i] - counter]] <- NULL
+for (i in 1:stateLen){
+  statewideGEO@polygons[[statePoly[i] - counter]] <- NULL
   counter <- counter + 1
 }
-
 statewideGEO@data <- statewideGEO@data[statewideGEO@data$stateName == "Connecticut",]
 countyElectionData$city <- as.numeric(countyElectionData$city)
-
 countyElectionData$county <- factor(countyElectionData$county, levels = levels(statewideGEO@data$NAME))
-
 
 # join the election data and the json data
 statewideGEO@data <-
   statewideGEO@data %>% 
     left_join(countyElectionData, by = c("stateName" = "state", 
                                          "NAME" = "county", "city"))
+
+# Grab state specific values for setview
 currentLong <- stateCoords$lon[stateCoords$state == "Connecticut"]
 currentLat <- stateCoords$lat[stateCoords$state == "Connecticut"]
 currentZoom <- stateCoords$zoom[stateCoords$state == "Connecticut"]
 
-
+# Organize the color
 colors <- c("red")
 if (statewideGEO@data$party[1] == "Democrat"){
   colors <- c("blue")
