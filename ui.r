@@ -1,19 +1,20 @@
+# Added any needed packages
 library(shiny)
 library(shinydashboard)
 library(lubridate)
 library(leaflet)
 library(tidyverse)
 
+# Pull in required data frames
 nationwideData <- read_csv("nationwideMapData.csv")
 sumStateData_joined <- read_csv('state_prob_join')
 sumStateData <- read_csv('state_data')
 statewideElectionData <- read_csv("statewideElectionData.csv")
 stateCoords <- read_csv("stateCoords.csv")
-statewideGEOData <- read_csv("statewideGEOData.csv")
 states <- statewideElectionData$state[statewideElectionData$state != "Alaska"]
 states <- states[states != "District of Columbia"]
 
-# Creates the outline for the website
+# Creates the dashboard outline for the app
 dashboardPage(
   skin = "purple",
   dashboardHeader(
@@ -91,7 +92,7 @@ dashboardPage(
                             href="https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/VOQCHQ",
                             target = '_blank')
                  ),
-                 
+      
                  br(),
                  br(),
                  br(),
@@ -178,8 +179,7 @@ dashboardPage(
         tabName = "srs",
         plotOutput("sumStateData"),
         
-        # This code is used to find the height of the window on launch and
-        # whenever the size of the window changes
+        # This code is used to find the height of the window
         tags$head(tags$script('
                               var srsHeight = 0;
                               $(document).on("shiny:connected", function(e) {
@@ -216,8 +216,7 @@ dashboardPage(
           plotOutput("pieChart"),
           plotOutput("barPlot"),
           
-          # This code is used to find the height of the window on launch and
-          # whenever the size of the window changes
+          # This code is used to find the height of the window
           tags$head(tags$script('
                               var predictorHeight = 0;
                               $(document).on("shiny:connected", function(e) {
@@ -288,6 +287,5 @@ dashboardPage(
       )
     )
   )
-  
 )
 

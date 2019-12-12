@@ -1,3 +1,4 @@
+# Added any needed packages
 library(shiny)
 library(ggplot2)
 library(tidyverse)
@@ -5,36 +6,35 @@ library(scales)
 library(leaflet)
 library(rgdal)
 
+# Pull in required data frames
 nationwideData <- read_csv("nationwideMapData.csv")
 sumStateData_joined <- read_csv('state_prob_join')
 sumStateData <- read_csv('state_data')
 statewideElectionData <- read_csv("statewideElectionData.csv")
 stateCoords <- read_csv("stateCoords.csv")
-statewideGEOData <- read_csv("statewideGEOData.csv")
 
 function(input, output, session) {
   
-  # Importing required GeoSpatial data from "https://eric.clst.org/tech/usgeojson/" -> "US States 5m GeoJSON"
+  # Importing required GeoSpatial data
   nationwideGEO  <- rgdal::readOGR("states.geo.json")
   
-  # Reactive function for nationwide state map
+  # Reactive function for changing the year
   changeNationYear <- reactive({
     return(input$nationYearID)
   })
   
   # Output function for nationwide state map
   output$nationwideMap <- renderLeaflet({
-    # This allows for different election years to be selected from drop-down 
-    # menu to display corresponding election map
+    
+    # Selecting the election data based on user input
     nationwideData <- nationwideData[nationwideData$Year == changeNationYear(),]
     
-    # Joining self-made data frame from above into nationwideGEO geospatial 
-    # dataframe for leaflet to use for visualization
+    # Joining elction data and json data
     nationwideGEO@data <- 
       nationwideGEO@data %>%
       left_join(nationwideData, by = c("NAME" = "State"))
     
-    # Create final working visualization of State Chloropleth Map!
+    # Create final leaflet visualization
     leaflet(data = nationwideGEO) %>%
       setView(-103.483330, 38.712046, 4) %>%
       addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
@@ -48,8 +48,6 @@ function(input, output, session) {
                   popup = nationwideGEO@data$popupText)
   })
   
-
-  
   # Reactive functions for statewide county map
   changeStateYear <- reactive({
 
@@ -62,13 +60,14 @@ function(input, output, session) {
   
   # Output function for statewide county map
   output$statewideMap <- renderLeaflet({
+    
     # Importing geo spatial data for statewide county map
     statewideGEO <- rgdal::readOGR("counties.json")
+    
     # Adding the state names to the counties table
     stateNames <- as.character(nationwideGEO@data$NAME)
     names(stateNames) <- as.character(nationwideGEO@data$STATE)
     statewideGEO@data$stateName <- stateNames[as.character(statewideGEO@data$STATE)]
-    
     
     # Adding city tags to the geo data for the table join
     statewideGEO@data$city <- 0
@@ -101,20 +100,22 @@ function(input, output, session) {
     statePoly <- which(statewideGEO@data$stateName != changeState())
     stateLen <- length(statePoly)
     counter <- 0
-    print(stateLen)
+    
+    # Filter out polygons of other states
     for (i in 1:stateLen){
       statewideGEO@polygons[[statePoly[i] - counter]] <- NULL
       counter <- counter + 1
     }
     counter <- 0
+    
+    # Last couple data manipulations before join
     statewideGEO@data <- statewideGEO@data[statewideGEO@data$stateName == changeState(),]
     statewideElectionData$city <- as.numeric(statewideElectionData$city)
     changeLevel <- levels(statewideGEO@data$NAME)
     statewideElectionData$county[statewideElectionData$county == "Do<f1>a Ana"] <- changeLevel[514]
-    print(changeLevel[514])
     statewideElectionData$county <- factor(statewideElectionData$county, levels = levels(statewideGEO@data$NAME))
     
-    # join the election data and the json data
+    # Join the election data and the json data
     statewideGEO@data <-
       statewideGEO@data %>% 
       left_join(statewideElectionData, by = c("stateName" = "state", 
@@ -134,7 +135,7 @@ function(input, output, session) {
       colors <- c("blue", "grey", "red")
     }
     
-    # Create final working visualization of State Chloropleth Map!
+    # Create final leaflet visualization
     leaflet(statewideGEO) %>%
       setView(currentLong, currentLat, currentZoom) %>%
       addPolygons(color = "#444444", weight = 1, smoothFactor = 0.5,
@@ -149,15 +150,13 @@ function(input, output, session) {
     
   })
   
-  
   # This code takes the window height from the ui code and saves it as numeric
   srsPlotCount <- reactive({
     req(input$srsHeight)
     as.numeric(input$srsHeight)
   })
   
-  # Here we define a plot height that will be used to dynamically 
-  # set our plot height
+  # Here we define a plot height for the plot
   srsPlotHeight <- reactive(0.85 * srsPlotCount())
   
   # The ouput plot for the party victories summary tab
@@ -186,6 +185,7 @@ function(input, output, session) {
       labs(fill = "Color ")
   })
   
+  # Code to change the values of check boxes for predictor page
   observe({
     
     updateCheckboxGroupInput(session, "repStates", 
@@ -200,6 +200,7 @@ function(input, output, session) {
     
   })
   
+  # Code to update the democrat and republican states based on user input
   updateTable <- reactive({
     demStates <- input$demStates
     repStates <- input$repStates
@@ -224,36 +225,22 @@ function(input, output, session) {
     as.numeric(input$predictorHeight)
   })
   
-  # Here we define a plot height that will be used to dynamically 
-  # set our plot height
+  # Here we define a plot height for the plot
   predictor1PlotHeight <- reactive(0.5 * predictorPlotCount())
   
+  # Code for the predictor bar plot
   output$barPlot <- renderPlot(height = predictor1PlotHeight, {
     
-    # loads the interactive table into the range of the bar plot
+    # Loads the interactive table into the range of the bar plot
     displayTable <- updateTable()
     
-    # Specify the data of interest and which columns are of interest
-    # We put color as the x variable and the electoral votes as the y variable
-    # we also fill the bar chart based on the color(democrat, republican, swingstate)
+    # Code for the ggplot that makes the visualization
     ggplot(displayTable, aes(color, electoralVotesNumber, fill=color)) +
-      
-      # specify bar chart 
       geom_bar(stat = "identity") +
-      
-      # specify what to color each party
       scale_fill_manual(values = c("blue", "red", "#838383")) +
-      
-      # give it a title
       ggtitle("Total Electoral Votes for each Party") +
-      
-      # give it a y-label
       ylab("Total Electoral Votes") +
-      
-      # give it an x label
       xlab("Declaration") + labs(fill = "Color") +
-      
-      # change some style features like the size of the plot and the background color
       theme(plot.title = element_text(hjust = 0.5, size = 24), 
           legend.background = element_rect(fill = "white", size = 0.5, 
                                            linetype = "solid", 
@@ -269,10 +256,6 @@ function(input, output, session) {
       coord_cartesian(ylim = c(0, 280))
   })
   
-  # Here we define a plot height that will be used to dynamically 
-  # set our plot height
-  predictor2PlotHeight <- reactive(0.5 * predictorPlotCount())
-  
   output$pieChart <- renderPlot( {
     
     # loads the interactive table into the range of the pie chart
@@ -283,47 +266,33 @@ function(input, output, session) {
                           ev=displayTable$electoralVotesNumber[displayTable$color == "Swing state"])
 
     #algorithm for calculating the probability
-    #count is the variable indicating which instance has electoral votes over 270
     demCount <- 0
     repCount <- 0
    
-     #10000 iterations
     for (i in seq(1:10000)) {
-      
-      # will possibly make changes to the type of distribution n is taken from
-      # where n is the number of states selected in each sampling
+
       number <- runif(1,min=1, max=length(state_ev_list$ev))
       as.integer(number)
-      
-      #code for sampling the vector of electoral votes
+
       sampling <- sample(state_ev_list$ev, as.integer(number))
       summation <- sum(sampling)
       
-      # checks to see is the sampling has over 270 electoral votes
       if (summation > (270 - sum(displayTable$electoralVotesNumber[displayTable$color == "Republican"]))){
-        
-        # increments the rep count
         repCount <- repCount + 1
       }
       
     }
     
-    # computes the probability the election going a certain way
+    # computes the two probabilities
     repProbability <- repCount / 10000
-    
-    # computes the democratic probability the election going a certain way
     demProbability <- 1 - repProbability
     
-    # Creates a data frame that will fed into the pie chart
+    # Code to create the pie chart
     probData <- data.frame(probs = c((demProbability*100), (repProbability*100)),
                             party = c("Democrats", "Republican"))
-    
-    
-    # creating a new column in prob data so that we can place the percentage in the chart
     probData <- probData %>%
                 arrange(desc(party)) %>%
                 mutate(lab.ypos = cumsum(probs) - 0.5*probs)
-    
     
     mycols <-c("#0000FF", "#FF0000")
     
